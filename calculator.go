@@ -2,8 +2,9 @@ package main
 
 import (
 	"fmt"
-	"strings"
-	"unicode"
+	 "strings"
+	 //"unicode"
+	 "strconv"
 )
 
 type Calc struct {
@@ -46,7 +47,7 @@ func (c *Calc) Divide() int {
 func is_roman_num(s string) bool {
 	for _, c := range s {
 		if _, ok := romanToArabic[string(c)]; !ok {
-			panic(RANGE)
+			return false
 		}
 	}
 	return true
@@ -67,64 +68,102 @@ const (
 	SIMPLE = "Вывод ошибки, так как число не простое."
 )
 
+func contains(s []string, str string) bool {
+	for _, v := range s {
+		if v == str {
+			return true
+		}
+	}
+	return false
+}
+
 func get_input() *Calc {
 	var input_string string
+    operator_list := []string{"+", "-", "*", "/"}
+    var calculator *Calc
 
 	fmt.Scanln(&input_string)
 	input_string = strings.Replace(input_string, " ", "", -1)
-
+	
+	f := input_string[0:1]
+	s := input_string[len(input_string)-1:]
+	operator := input_string[1:2]
+	
+	fmt.Println(f)
+	fmt.Println(s)
+	
 	if len(input_string) != 3 {
 		panic(HIGH)
 	}
-	if input_string[1] != '=' || input_string[1] != '+' || input_string[1] != '-' || input_string[1] != '*' || input_string[1] != '/' {
-		panic(LOW)
-	}
-	if unicode.IsDigit(rune(input_string[0])) && unicode.IsDigit(rune(input_string[2])) {
-		if (input_string[0] < 0 && input_string[0] > 10) || (input_string[2] < 0 && input_string[2] > 10) {
+	if !contains(operator_list, operator) {
+			panic(LOW)
+		}
+	if (is_roman_num(f) && !is_roman_num(s)) || (is_roman_num(s) && !is_roman_num(f)) {
+	    panic(SCALE)
+	} else if !is_roman_num(f) && !is_roman_num(s)  {
+	    f, err := strconv.Atoi(f)
+	    s, err := strconv.Atoi(s)    
+	    if err != nil {
+        panic(RANGE)
+    }
+		if (f < 0 && f > 10) || (s < 0 && s > 10) {
 			panic(RANGE)
-		} else if input_string[0]%1 == '0' && input_string[2]%1 == '0' {
+		} else if f%1 == '0' && s%1 == '0' {
 			panic(SIMPLE)
 		}
-	} else if !is_roman_num(string(input_string[0])) && !is_roman_num(string(input_string[0])) {
-		panic(RANGE)
-	} else if unicode.IsDigit(rune(input_string[0])) && !unicode.IsDigit(rune(input_string[2])) || !unicode.IsDigit(rune(input_string[0])) && unicode.IsDigit(rune(input_string[2])) {
-		panic(SCALE)
+		
+		calculator := &Calc{
+		operand1: f,
+		operand2: s,
+		operator: string(operator),
 	}
-
-	calculator := &Calc{
-		operand1: int(input_string[0]),
-		operand2: int(input_string[2]),
-		operator: string(input_string[1]),
+	return calculator
+	}else{
+	    calculator := &Calc{
+		operand1: romanToArabic[f],
+		operand2: romanToArabic[s],
+		operator: string(operator),
 	}
-
+	return calculator
+	}
+	
 	return calculator
 }
+
 
 func main() {
 	input := get_input()
 
 	var result int
-
-	if unicode.IsDigit(rune(input.operand1)) && unicode.IsDigit(rune(input.operand2)) {
+	
+	if is_roman_num(string(input.operand1)) && is_roman_num(string(input.operand2)) {
 		switch input.operator {
-		case "+":
+		case "+":{
+		     fmt.Println("roman plus")
 			result = input.Add()
-		case "-":
+		}
+		case "-":{
+		    fmt.Println("minus")
+		    result = input.Add()
+		}
+		case "*":{
+		    fmt.Println("umn")
 			result = input.Add()
-		case "*":
+		}
+		case "/":{
+		    fmt.Println("del")
 			result = input.Add()
-		case "/":
-			result = input.Add()
+		}
 		default:
 			fmt.Println("Неизвестный оператор")
 			return
 		}
-	} else if is_roman_num(string(input.operand1)) && is_roman_num(string(input.operand2)) {
+	}else {
 		switch input.operator {
 		case "+":
 			result = input.Add()
 		case "-":
-			result = input.Add()
+		    result = input.Add()
 		case "*":
 			result = input.Add()
 		case "/":
