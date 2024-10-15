@@ -89,9 +89,6 @@ func get_input() *Calc {
 	s := input_string[len(input_string)-1:]
 	operator := input_string[1:2]
 	
-	fmt.Println(f)
-	fmt.Println(s)
-	
 	if len(input_string) != 3 {
 		panic(HIGH)
 	}
@@ -138,22 +135,14 @@ func main() {
 	
 	if is_roman_num(string(input.operand1)) && is_roman_num(string(input.operand2)) {
 		switch input.operator {
-		case "+":{
-		     fmt.Println("roman plus")
+		case "+":
 			result = input.Add()
-		}
-		case "-":{
-		    fmt.Println("minus")
-		    result = input.Add()
-		}
-		case "*":{
-		    fmt.Println("umn")
-			result = input.Add()
-		}
-		case "/":{
-		    fmt.Println("del")
-			result = input.Add()
-		}
+		case "-":
+		    result = input.Sub()
+		case "*":
+			result = input.Multiply()
+		case "/":
+			result = input.Divide()
 		default:
 			fmt.Println("Неизвестный оператор")
 			return
@@ -163,11 +152,11 @@ func main() {
 		case "+":
 			result = input.Add()
 		case "-":
-		    result = input.Add()
+		    result = input.Sub()
 		case "*":
-			result = input.Add()
+			result = input.Multiply()
 		case "/":
-			result = input.Add()
+			result = input.Divide()
 		default:
 			fmt.Println("Неизвестный оператор")
 			return
