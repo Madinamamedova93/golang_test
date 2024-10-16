@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	 "strings"
-	 //"unicode"
 	 "strconv"
 )
 
@@ -15,12 +14,15 @@ type Calc struct {
 
 var romanToArabic = map[string]int{
 	"I": 1,
+	"II": 2,
+	"III": 3,
+	"IV": 4,
 	"V": 5,
+	"VI": 6,
+	"VII": 7,
+	"IIX": 8,
+	"IX": 9,
 	"X": 10,
-	"L": 50,
-	"C": 100,
-	"D": 500,
-	"M": 1000,
 }
 
 func (c *Calc) Add() int {
@@ -77,6 +79,15 @@ func contains(s []string, str string) bool {
 	return false
 }
 
+func operator_func(s []string, str string) string {
+	for _, v := range s {
+	    if strings.Contains(str, v) == true{
+	        return v
+	    }
+	}
+    return "empty str"
+}
+
 func get_input() *Calc {
 	var input_string string
     operator_list := []string{"+", "-", "*", "/"}
@@ -85,13 +96,12 @@ func get_input() *Calc {
 	fmt.Scanln(&input_string)
 	input_string = strings.Replace(input_string, " ", "", -1)
 	
-	f := input_string[0:1]
-	s := input_string[len(input_string)-1:]
-	operator := input_string[1:2]
-	
-	if len(input_string) != 3 {
-		panic(HIGH)
-	}
+	operator := operator_func(operator_list, input_string)
+	index := strings.Index(input_string, operator)
+
+	f := input_string[0:index]
+	s := input_string[index+1:]
+
 	if !contains(operator_list, operator) {
 			panic(LOW)
 		}
