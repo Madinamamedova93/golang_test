@@ -6,6 +6,8 @@ import (
 	 "strconv"
 )
 
+var is_roman bool
+
 type Calc struct {
 	operand1 int
 	operand2 int
@@ -53,6 +55,42 @@ func is_roman_num(s string) bool {
 		}
 	}
 	return true
+}
+
+func integerToRoman(number int) string {
+	maxRomanNumber := 3999
+	if number > maxRomanNumber {
+		return strconv.Itoa(number)
+	}
+
+	conversions := []struct {
+		value int
+		digit string
+	}{
+		{1000, "M"},
+		{900, "CM"},
+		{500, "D"},
+		{400, "CD"},
+		{100, "C"},
+		{90, "XC"},
+		{50, "L"},
+		{40, "XL"},
+		{10, "X"},
+		{9, "IX"},
+		{5, "V"},
+		{4, "IV"},
+		{1, "I"},
+	}
+
+	var roman strings.Builder
+	for _, conversion := range conversions {
+		for number >= conversion.value {
+			roman.WriteString(conversion.digit)
+			number -= conversion.value
+		}
+	}
+
+	return roman.String()
 }
 
 const (
@@ -130,7 +168,9 @@ func get_input() *Calc {
 		operand1: romanToArabic[f],
 		operand2: romanToArabic[s],
 		operator: string(operator),
+		
 	}
+	is_roman = true
 	return calculator
 	}
 	
@@ -143,7 +183,6 @@ func main() {
 
 	var result int
 	
-	if is_roman_num(string(input.operand1)) && is_roman_num(string(input.operand2)) {
 		switch input.operator {
 		case "+":
 			result = input.Add()
@@ -157,21 +196,9 @@ func main() {
 			fmt.Println("Неизвестный оператор")
 			return
 		}
-	}else {
-		switch input.operator {
-		case "+":
-			result = input.Add()
-		case "-":
-		    result = input.Sub()
-		case "*":
-			result = input.Multiply()
-		case "/":
-			result = input.Divide()
-		default:
-			fmt.Println("Неизвестный оператор")
-			return
+		if is_roman{
+		    fmt.Println("Результат: ", integerToRoman(result))
+		}else{
+		    fmt.Println("Результат: ", result)
 		}
-	}
-
-	fmt.Println("Результат: ", result)
 }
