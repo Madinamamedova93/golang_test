@@ -121,9 +121,9 @@ func operator_func(s []string, str string) string {
 	for _, v := range s {
 	    if strings.Contains(str, v) == true{
 	        return v
-	    }
+	    } 
 	}
-    return "empty str"
+    panic(HIGH)
 }
 
 func get_input() *Calc {
@@ -197,6 +197,11 @@ func main() {
 			return
 		}
 		if is_roman{
+		    if result < 0 {
+		    panic(DIV)
+		    }else if result ==0 {
+		        panic(ZERO)
+		    }
 		    fmt.Println("Результат: ", integerToRoman(result))
 		}else{
 		    fmt.Println("Результат: ", result)
